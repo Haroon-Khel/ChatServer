@@ -2,7 +2,6 @@ package chatServer2;
 
 import java.net.*;
 import java.util.ArrayList;
-import java.util.Scanner;
 import java.io.*;
 
 
@@ -10,10 +9,6 @@ public class Server2 {
 	
 	private ArrayList<ClientThread> clientThreadList = new ArrayList<ClientThread>();
 	private ServerSocket serverSocket;
-	private OutputStream outputStream;
-	private PrintWriter printWriter;
-	private Scanner scanner;
-	private String outputMessage;
 	
 	public Server2() {
 		
@@ -42,7 +37,7 @@ public class Server2 {
 		
 	}
 	
-	public synchronized void sendToClients(String message, int ID) {
+	public synchronized void sendToClients(String message, int ID, String Name) {
 		
 		for (int i = 0; i < clientThreadList.size();i++) {
 			
@@ -55,7 +50,7 @@ public class Server2 {
 				} 
 				else {
 					
-					String messageToSend = "[" + ID + "]: " + message;
+					String messageToSend = "[" + Name + "]: " + message;
 					clientT.printWriter.println(messageToSend);
 					clientT.printWriter.flush();
 	//	DEBUG			System.out.println(clientThreadList.size());
@@ -73,6 +68,8 @@ public class Server2 {
 	class ClientThread extends Thread {
 
 		private int id;
+		private String fullID;
+		private String ID;
 		private boolean run = true;
 		private Socket socket;
 		private InputStream inputStream;
@@ -106,33 +103,38 @@ public class Server2 {
 			return id;
 		}
 		
+		public String getFullID() {
+			return fullID;
+		}
+		
 		public void run() {
 			
-			while (run) { 
+			try {
 				
-				try {
+				ID = bufferedReader.readLine();
+				fullID = Integer.toString(getID()) + " - " + ID;
+			
+				while (run) { 
 					
 					message = bufferedReader.readLine();
-						
+							
 					if (message == null) {
 						stopThread();
 					}
 					else {
-						sendToClients(message, getID());
+						sendToClients(message, getID(),getFullID());
 					}
-				} catch (IOException e) {
-					e.printStackTrace();
-				}	
-			}
+				} 
+			} 
+			catch (IOException e) {
+				e.printStackTrace();
+}	
 		}
 		
 		public void stopThread() {
 			
 			try {
-				
 				run = false;
-				
-				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
