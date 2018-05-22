@@ -149,6 +149,6 @@ public class Server2 {
 	TODO Create a method to remove threads from thread list once the thread closes - needs work to solve the 1 message delay
 	when reconnecting 
 	TODO Create a method to prevent "echoing" - Done
-	TODO Prompt the clients to input a username upon conneccting. Use the username as their unique ID
+	TODO Prompt the clients to input a username upon conneccting. Use the username as their unique ID - Done
 */
 
